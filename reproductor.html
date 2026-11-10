@@ -19,106 +19,319 @@
       color: white;
       font-family: Arial, sans-serif;
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
     }
 
     header {
       text-align: center;
-      padding: 22px 10px;
+      padding: 22px;
     }
 
     header h1 {
-      font-size: 28px;
+      font-size: 27px;
       letter-spacing: 2px;
-      color: white;
     }
 
     .movie-title {
       text-align: center;
-      margin: 15px 10px;
-      font-size: 19px;
+      padding: 12px;
+      font-size: 18px;
       color: #ddd;
     }
 
-    .player-container {
+    .player {
       width: 95%;
       max-width: 1000px;
-      margin: 10px auto;
-      background: black;
-      aspect-ratio: 16 / 9;
+      margin: 15px auto;
+      background: #000;
       border-radius: 10px;
       overflow: hidden;
-      box-shadow: 0 0 20px rgba(130, 60, 255, 0.2);
     }
 
-    .player-container iframe {
+    video {
+      display: block;
       width: 100%;
-      height: 100%;
-      border: none;
+      aspect-ratio: 16 / 9;
+      background: #000;
+      object-fit: contain;
     }
 
-    .buttons {
+    .controls {
+      padding: 12px;
+      background: #171717;
+    }
+
+    .progress {
+      width: 100%;
+      accent-color: #9147ff;
+      cursor: pointer;
+    }
+
+    .control-row {
       display: flex;
-      justify-content: center;
-      margin: 25px 0;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-top: 10px;
     }
 
-    .back-button {
+    .control-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    button {
+      border: none;
+      background: transparent;
+      color: white;
+      font-size: 19px;
+      cursor: pointer;
+      padding: 5px;
+    }
+
+    button:active {
+      color: #a66bff;
+    }
+
+    .time {
+      font-size: 12px;
+      color: #ccc;
+      white-space: nowrap;
+    }
+
+    .volume {
+      width: 75px;
+      accent-color: #9147ff;
+    }
+
+    .back {
+      display: block;
+      width: fit-content;
+      margin: 25px auto;
+      padding: 12px 25px;
       background: #7028d9;
       color: white;
       text-decoration: none;
-      padding: 12px 28px;
-      border-radius: 8px;
-      font-size: 15px;
-      transition: 0.2s;
-    }
-
-    .back-button:hover {
-      background: #873fff;
+      border-radius: 7px;
     }
 
     footer {
       text-align: center;
+      padding: 20px;
       color: #777;
       font-size: 12px;
-      padding: 20px;
-      margin-top: auto;
+    }
+
+    @media (max-width: 450px) {
+      .volume {
+        width: 55px;
+      }
+
+      button {
+        font-size: 17px;
+      }
+
+      .control-group {
+        gap: 7px;
+      }
+    }
+
+    .player:fullscreen {
+      width: 100%;
+      height: 100%;
+      max-width: none;
+      margin: 0;
+      border-radius: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .player:fullscreen video {
+      width: 100%;
+      max-height: calc(100vh - 90px);
     }
   </style>
 </head>
 
 <body>
 
-  <header>
-    <h1>Reproducer Jr</h1>
-  </header>
+<header>
+  <h1>Reproducer Jr</h1>
+</header>
 
-  <div class="movie-title">
-    Residen Ev2026
+<div class="movie-title">
+  Residen Ev2026
+</div>
+
+<div class="player" id="player">
+
+  <video id="video" playsinline preload="metadata">
+    <source
+      src="https://pub-5d6d024eb924401795da4931cd2e6c2e.r2.dev/%5BDoblaje%20Espa%C3%B1ol%5DResident%20Evil_%20Noche%20cero%20-%201.mp4"
+      type="video/mp4">
+    Tu navegador no puede reproducir este video.
+  </video>
+
+  <div class="controls">
+
+    <input
+      type="range"
+      id="progress"
+      class="progress"
+      value="0"
+      min="0"
+      max="100">
+
+    <div class="control-row">
+
+      <div class="control-group">
+
+        <button id="playBtn" aria-label="Reproducir">▶</button>
+
+        <button id="backBtn" aria-label="Retroceder 10 segundos">
+          ↶10
+        </button>
+
+        <button id="forwardBtn" aria-label="Adelantar 10 segundos">
+          10↷
+        </button>
+
+        <span class="time" id="time">
+          0:00 / 0:00
+        </span>
+
+      </div>
+
+      <div class="control-group">
+
+        <button id="muteBtn" aria-label="Silenciar">🔊</button>
+
+        <input
+          type="range"
+          id="volume"
+          class="volume"
+          min="0"
+          max="1"
+          step="0.05"
+          value="1">
+
+        <button id="fullscreenBtn" aria-label="Pantalla completa">
+          ⛶
+        </button>
+
+      </div>
+
+    </div>
+
   </div>
+</div>
 
-  <main>
-    <div class="player-container">
+<a href="index.html" class="back">
+  Volver al inicio
+</a>
 
-      <iframe
-        src="https://drive.google.com/file/d/1oZAxKET74wYgKaGmMvNEV-X58EprC9Xe/preview"
-        allow="autoplay; fullscreen"
-        allowfullscreen>
-      </iframe>
+<footer>
+  @copyright Jeremyas
+</footer>
 
-    </div>
+<script>
+  const video = document.getElementById("video");
+  const player = document.getElementById("player");
 
-    <div class="buttons">
-      <a href="index.html" class="back-button">
-        Volver al inicio
-      </a>
-    </div>
-  </main>
+  const playBtn = document.getElementById("playBtn");
+  const backBtn = document.getElementById("backBtn");
+  const forwardBtn = document.getElementById("forwardBtn");
+  const progress = document.getElementById("progress");
+  const time = document.getElementById("time");
+  const volume = document.getElementById("volume");
+  const muteBtn = document.getElementById("muteBtn");
+  const fullscreenBtn = document.getElementById("fullscreenBtn");
 
-  <footer>
-    @copyright Jeremyas
-  </footer>
+  function formatTime(seconds) {
+    if (!Number.isFinite(seconds)) return "0:00";
+
+    const minutes = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+
+    return minutes + ":" + String(secs).padStart(2, "0");
+  }
+
+  playBtn.addEventListener("click", () => {
+    if (video.paused) {
+      video.play();
+    } else {
+      video.pause();
+    }
+  });
+
+  video.addEventListener("play", () => {
+    playBtn.textContent = "⏸";
+  });
+
+  video.addEventListener("pause", () => {
+    playBtn.textContent = "▶";
+  });
+
+  backBtn.addEventListener("click", () => {
+    video.currentTime = Math.max(0, video.currentTime - 10);
+  });
+
+  forwardBtn.addEventListener("click", () => {
+    if (Number.isFinite(video.duration)) {
+      video.currentTime = Math.min(
+        video.duration,
+        video.currentTime + 10
+      );
+    }
+  });
+
+  video.addEventListener("loadedmetadata", () => {
+    progress.max = video.duration;
+    time.textContent =
+      "0:00 / " + formatTime(video.duration);
+  });
+
+  video.addEventListener("timeupdate", () => {
+    progress.value = video.currentTime;
+
+    time.textContent =
+      formatTime(video.currentTime) +
+      " / " +
+      formatTime(video.duration);
+  });
+
+  progress.addEventListener("input", () => {
+    video.currentTime = Number(progress.value);
+  });
+
+  volume.addEventListener("input", () => {
+    video.volume = Number(volume.value);
+    video.muted = video.volume === 0;
+    muteBtn.textContent = video.muted ? "🔇" : "🔊";
+  });
+
+  muteBtn.addEventListener("click", () => {
+    video.muted = !video.muted;
+    muteBtn.textContent = video.muted ? "🔇" : "🔊";
+  });
+
+  fullscreenBtn.addEventListener("click", async () => {
+    try {
+      if (!document.fullscreenElement) {
+        await player.requestFullscreen();
+      } else {
+        await document.exitFullscreen();
+      }
+    } catch (error) {
+      console.log("Pantalla completa no disponible", error);
+    }
+  });
+
+  video.addEventListener("error", () => {
+    alert("No se pudo cargar el video. Comprueba el enlace y los permisos.");
+  });
+</script>
 
 </body>
 </html>
