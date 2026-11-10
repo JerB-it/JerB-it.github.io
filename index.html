@@ -1,9 +1,11 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mi reproductor</title>
+
+<title>Reproducer Jr</title>
 
 <style>
 * {
@@ -15,218 +17,52 @@ body {
     background: #090909;
     color: white;
     font-family: Arial, sans-serif;
-    min-height: 100vh;
-    text-align: center;
-}
-
-header {
-    padding: 25px 10px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 h1 {
-    font-size: 27px;
-    color: #a879ff;
+    font-size: 35px;
+    margin-bottom: 45px;
 }
 
-.container {
-    width: 95%;
-    max-width: 850px;
-    margin: auto;
-}
-
-video {
-    width: 100%;
-    max-height: 65vh;
-    background: black;
-    border-radius: 12px;
-}
-
-.controls {
-    background: #191919;
-    padding: 20px;
-    border-radius: 12px;
-    margin-top: 15px;
-}
-
-button {
+a {
+    text-decoration: none;
     background: #792cff;
     color: white;
-    border: none;
-    padding: 13px 17px;
-    margin: 5px;
-    border-radius: 8px;
-    font-size: 15px;
-    cursor: pointer;
+    padding: 18px 35px;
+    border-radius: 12px;
+    font-size: 19px;
+    font-weight: bold;
 }
 
-button:active {
+a:active {
     background: #a879ff;
 }
 
-input[type="range"] {
-    accent-color: #a879ff;
-    cursor: pointer;
-}
-
-#progress {
-    width: 100%;
-}
-
-#volume {
-    width: 130px;
-}
-
-.info {
-    color: #999;
+footer {
+    position: absolute;
+    bottom: 20px;
+    color: #888;
     font-size: 13px;
-    margin-top: 20px;
 }
-
 </style>
 </head>
 
 <body>
 
-<header>
-    <h1>MI REPRODUCTOR</h1>
-    <p>Tu espacio multimedia personal</p>
-</header>
+<h1>Reproducer Jr</h1>
 
-<div class="container">
+<a href="reproductor.html">
+    Residen Ev2026
+</a>
 
-    <video id="video" playsinline preload="metadata">
-        <source src="pelicula.mp4" type="video/mp4">
-        Tu navegador no puede reproducir este video.
-    </video>
-
-    <div class="controls">
-
-        <div>
-            <button onclick="retroceder()">⏪ 10s</button>
-
-            <button onclick="reproducir()">
-                ▶ / ⏸
-            </button>
-
-            <button onclick="adelantar()">10s ⏩</button>
-        </div>
-
-        <p>
-            <span id="actual">00:00</span>
-            /
-            <span id="duracion">00:00</span>
-        </p>
-
-        <input
-            type="range"
-            id="progress"
-            min="0"
-            max="100"
-            value="0"
-        >
-
-        <br><br>
-
-        <label>🔊 Volumen</label>
-
-        <input
-            type="range"
-            id="volume"
-            min="0"
-            max="1"
-            step="0.01"
-            value="1"
-        >
-
-        <br><br>
-
-        <button onclick="pantallaCompleta()">
-            ⛶ Pantalla completa
-        </button>
-
-    </div>
-
-    <p class="info">
-        Reproductor personal · GitHub Pages
-    </p>
-
-</div>
-
-<script>
-
-const video = document.getElementById("video");
-const progress = document.getElementById("progress");
-const volume = document.getElementById("volume");
-
-function reproducir() {
-    if (video.paused) {
-        video.play();
-    } else {
-        video.pause();
-    }
-}
-
-function adelantar() {
-    video.currentTime = Math.min(
-        video.duration,
-        video.currentTime + 10
-    );
-}
-
-function retroceder() {
-    video.currentTime = Math.max(
-        0,
-        video.currentTime - 10
-    );
-}
-
-function pantallaCompleta() {
-    if (video.requestFullscreen) {
-        video.requestFullscreen();
-    } else if (video.webkitEnterFullscreen) {
-        video.webkitEnterFullscreen();
-    }
-}
-
-function formatoTiempo(segundos) {
-    if (!Number.isFinite(segundos)) return "00:00";
-
-    const min = Math.floor(segundos / 60);
-    const seg = Math.floor(segundos % 60);
-
-    return String(min).padStart(2, "0") + ":" +
-           String(seg).padStart(2, "0");
-}
-
-video.addEventListener("loadedmetadata", () => {
-    document.getElementById("duracion").textContent =
-        formatoTiempo(video.duration);
-});
-
-video.addEventListener("timeupdate", () => {
-    progress.value =
-        video.duration ? (video.currentTime / video.duration) * 100 : 0;
-
-    document.getElementById("actual").textContent =
-        formatoTiempo(video.currentTime);
-});
-
-progress.addEventListener("input", () => {
-    if (video.duration) {
-        video.currentTime =
-            (progress.value / 100) * video.duration;
-    }
-});
-
-volume.addEventListener("input", () => {
-    video.volume = Number(volume.value);
-});
-
-video.addEventListener("error", () => {
-    console.log("No se pudo cargar el video.");
-});
-
-</script>
+<footer>
+    @copyright Jeremyas
+</footer>
 
 </body>
 </html>
