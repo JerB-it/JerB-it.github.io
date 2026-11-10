@@ -1,164 +1,124 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080808">
 
-<title>Residen Ev2026</title>
+  <title>Reproducer Jr</title>
 
-<style>
-body {
-    margin: 0;
-    padding: 20px 12px;
-    background: #090909;
-    color: white;
-    font-family: Arial, sans-serif;
-    text-align: center;
-}
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-h1 {
-    color: white;
-}
+    body {
+      background: #080808;
+      color: white;
+      font-family: Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
 
-video {
-    width: 100%;
-    max-width: 900px;
-    max-height: 65vh;
-    background: black;
-    border-radius: 12px;
-}
+    header {
+      text-align: center;
+      padding: 22px 10px;
+    }
 
-.controls {
-    max-width: 850px;
-    margin: 15px auto;
-    background: #191919;
-    padding: 20px;
-    border-radius: 12px;
-}
+    header h1 {
+      font-size: 28px;
+      letter-spacing: 2px;
+      color: white;
+    }
 
-button {
-    background: #792cff;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 12px 17px;
-    margin: 5px;
-    cursor: pointer;
-}
+    .movie-title {
+      text-align: center;
+      margin: 15px 10px;
+      font-size: 19px;
+      color: #ddd;
+    }
 
-input {
-    accent-color: #792cff;
-}
+    .player-container {
+      width: 95%;
+      max-width: 1000px;
+      margin: 10px auto;
+      background: black;
+      aspect-ratio: 16 / 9;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 20px rgba(130, 60, 255, 0.2);
+    }
 
-#progress {
-    width: 100%;
-}
+    .player-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
 
-.back {
-    display: inline-block;
-    margin-top: 20px;
-    color: #b995ff;
-    text-decoration: none;
-}
-</style>
+    .buttons {
+      display: flex;
+      justify-content: center;
+      margin: 25px 0;
+    }
+
+    .back-button {
+      background: #7028d9;
+      color: white;
+      text-decoration: none;
+      padding: 12px 28px;
+      border-radius: 8px;
+      font-size: 15px;
+      transition: 0.2s;
+    }
+
+    .back-button:hover {
+      background: #873fff;
+    }
+
+    footer {
+      text-align: center;
+      color: #777;
+      font-size: 12px;
+      padding: 20px;
+      margin-top: auto;
+    }
+  </style>
 </head>
 
 <body>
 
-<h1>Residen Ev2026</h1>
+  <header>
+    <h1>Reproducer Jr</h1>
+  </header>
 
-<video id="video" playsinline controls>
-    <source src="pelicula.mp4" type="video/mp4">
-    Tu navegador no soporta este video.
-</video>
+  <div class="movie-title">
+    Residen Ev2026
+  </div>
 
-<div class="controls">
+  <main>
+    <div class="player-container">
 
-    <button onclick="video.currentTime =
-    Math.max(0, video.currentTime - 10)">
-        ⏪ 10s
-    </button>
+      <iframe
+        src="https://drive.google.com/file/d/1oZAxKET74wYgKaGmMvNEV-X58EprC9Xe/preview"
+        allow="autoplay; fullscreen"
+        allowfullscreen>
+      </iframe>
 
-    <button onclick="
-    video.paused ? video.play() : video.pause()">
-        ▶ / ⏸
-    </button>
+    </div>
 
-    <button onclick="
-    video.currentTime = Math.min(
-    video.duration, video.currentTime + 10)">
-        10s ⏩
-    </button>
+    <div class="buttons">
+      <a href="index.html" class="back-button">
+        Volver al inicio
+      </a>
+    </div>
+  </main>
 
-    <p>
-        <span id="actual">00:00</span>
-        /
-        <span id="total">00:00</span>
-    </p>
-
-    <input type="range" id="progress"
-    min="0" max="100" value="0">
-
-    <br><br>
-
-    🔊 Volumen
-
-    <input type="range" id="volume"
-    min="0" max="1" step="0.01" value="1">
-
-    <br><br>
-
-    <button onclick="
-    video.requestFullscreen &&
-    video.requestFullscreen()">
-        ⛶ Pantalla completa
-    </button>
-
-</div>
-
-<a class="back" href="index.html">
-    ← Volver al inicio
-</a>
-
-<script>
-const video = document.getElementById("video");
-const progress = document.getElementById("progress");
-const volume = document.getElementById("volume");
-
-function timeFormat(s) {
-    if (!Number.isFinite(s)) return "00:00";
-
-    let m = Math.floor(s / 60);
-    let sec = Math.floor(s % 60);
-
-    return String(m).padStart(2, "0") + ":" +
-           String(sec).padStart(2, "0");
-}
-
-video.addEventListener("loadedmetadata", () => {
-    document.getElementById("total").textContent =
-        timeFormat(video.duration);
-});
-
-video.addEventListener("timeupdate", () => {
-    document.getElementById("actual").textContent =
-        timeFormat(video.currentTime);
-
-    progress.value = video.duration ?
-        video.currentTime / video.duration * 100 : 0;
-});
-
-progress.addEventListener("input", () => {
-    if (video.duration) {
-        video.currentTime =
-            progress.value / 100 * video.duration;
-    }
-});
-
-volume.addEventListener("input", () => {
-    video.volume = Number(volume.value);
-});
-</script>
+  <footer>
+    @copyright Jeremyas
+  </footer>
 
 </body>
 </html>
