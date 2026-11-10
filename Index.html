@@ -1,0 +1,163 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mi botón personalizado</title>
+
+<style>
+body {
+    background: #111;
+    color: white;
+    font-family: Arial;
+    text-align: center;
+    padding-top: 150px;
+}
+
+button {
+    background: #7b2cff;
+    color: white;
+    border: none;
+    padding: 18px 35px;
+    font-size: 20px;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #a36aff;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Mi página personalizada</h1>
+
+<button onclick="abrirReproductor()">
+    Haz clic aquí
+</button>
+
+<script>
+function abrirReproductor() {
+
+    const nuevaPestana = window.open("", "_blank");
+
+    if (!nuevaPestana) {
+        alert("Permite las ventanas emergentes.");
+        return;
+    }
+
+    nuevaPestana.document.write(`
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mi reproductor</title>
+
+    <style>
+    body {
+        background: #080808;
+        color: white;
+        font-family: Arial;
+        text-align: center;
+        padding: 20px;
+    }
+
+    video, img {
+        width: 95%;
+        max-width: 900px;
+        max-height: 70vh;
+        border-radius: 12px;
+    }
+
+    .controles {
+        margin-top: 20px;
+    }
+
+    button {
+        background: #7b2cff;
+        color: white;
+        border: none;
+        padding: 12px 18px;
+        margin: 5px;
+        border-radius: 8px;
+        cursor: pointer;
+    }
+
+    input {
+        cursor: pointer;
+    }
+    </style>
+    </head>
+
+    <body>
+
+    <h2>Mi contenido multimedia</h2>
+
+    <video id="video" controls playsinline>
+        <source src="MI_VIDEO.mp4" type="video/mp4">
+    </video>
+
+    <div class="controles">
+
+        <button onclick="video.currentTime -= 10">
+            ⏪ -10s
+        </button>
+
+        <button onclick="
+        video.paused ? video.play() : video.pause()">
+            ▶ / ⏸
+        </button>
+
+        <button onclick="video.currentTime += 10">
+            +10s ⏩
+        </button>
+
+        <br><br>
+
+        Volumen:
+        <input type="range"
+        min="0" max="1" step="0.01"
+        value="1"
+        oninput="video.volume = this.value">
+
+        <br><br>
+
+        <label>
+            Progreso:
+            <input type="range"
+            id="progreso"
+            min="0" max="100" value="0"
+            oninput="
+            video.currentTime =
+            (this.value / 100) * video.duration">
+        </label>
+
+    </div>
+
+    <script>
+    const video = document.getElementById("video");
+    const progreso = document.getElementById("progreso");
+
+    video.addEventListener("timeupdate", () => {
+        if (video.duration) {
+            progreso.value =
+            (video.currentTime / video.duration) * 100;
+        }
+    });
+    <\/script>
+
+    </body>
+    </html>
+    `);
+
+    nuevaPestana.document.close();
+}
+</script>
+
+</body>
+</html>
